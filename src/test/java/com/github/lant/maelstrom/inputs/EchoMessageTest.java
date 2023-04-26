@@ -10,7 +10,7 @@ class EchoMessageTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final String jsonMessage = """
-{"src":"source","dest":"destination","body":{"echo":"echo_echo","msg_id":0}}""";
+            {"src":"source","dest":"destination","body":{"echo":"echo_echo","msg_id":0}}""";
 
     @Test
     void testToJson() throws JsonProcessingException {

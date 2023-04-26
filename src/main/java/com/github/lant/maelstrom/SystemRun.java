@@ -24,7 +24,7 @@ public class SystemRun {
             JsonNode receivedValue = objectMapper.readTree(value);
             String messageType = receivedValue.get("body").get("type").asText();
             switch (messageType) {
-                //case INIT -> handler.handleInit(new InitMessage(receivedValue));
+                case INIT -> handler.handleInit(new InitMessage(receivedValue));
                 case ECHO -> handler.handleEcho(new EchoMessage(receivedValue));
                 default -> throw new Exception("Don't know how to handle message type: " + messageType);
             }

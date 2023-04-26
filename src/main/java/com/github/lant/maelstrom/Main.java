@@ -2,6 +2,7 @@ package com.github.lant.maelstrom;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.lant.maelstrom.inputs.EchoMessage;
+import com.github.lant.maelstrom.inputs.InitMessage;
 import com.github.lant.maelstrom.responses.Responses;
 
 public class Main {
@@ -10,6 +11,19 @@ public class Main {
         SystemRun run = new SystemRun();
         MaelstromHandler handler = new MaelstromHandler() {
             String myId;
+
+            @Override
+            public void handleInit(InitMessage parseInit) throws JsonProcessingException {
+                myId = parseInit.node_id();
+                System.err.println("--> Received: " + parseInit);
+                String response = responses.generateInitOk(
+                        myId,
+                        parseInit.headers().src(),
+                        parseInit.msg_id());
+                System.err.println("--> Responding: " + response);
+                System.out.println(response);
+
+            }
 
             @Override
             public void handleEcho(EchoMessage parseEcho) throws JsonProcessingException {
