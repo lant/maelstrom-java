@@ -1,66 +1,42 @@
 package com.github.lant.maelstrom.responses;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.lant.maelstrom.responses.echo.EchoResponse;
+import com.github.lant.maelstrom.responses.generate.GenerateResponse;
+import com.github.lant.maelstrom.responses.init.InitOkResponse;
 
 public class Responses {
-    ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    public String generateInitOk(String myId, String dst, int reply_to) throws JsonProcessingException {
-        return mapper.writeValueAsString(new InitOkResponse(myId, dst, reply_to));
+    /**
+     * Generate a response to the Init Request.
+     * @param myNodeId The node where you're responding from.
+     * @param dst
+     * @param reply_to
+     * @return
+     * @throws JsonProcessingException
+     */
+    public String generateInitOk(String myNodeId, String dst, int reply_to) throws JsonProcessingException {
+        return mapper.writeValueAsString(new InitOkResponse(myNodeId, dst, reply_to));
     }
 
-    public String generateEchoResponse(String myId, String dst, int reply_to, String echo, int msg_id) throws JsonProcessingException {
-        return mapper.writeValueAsString(new EchoResponse(myId, dst, reply_to, echo, msg_id));
+    public String generateEchoResponse(String myNodeId, String dst, int reply_to, String echo, int msg_id) throws JsonProcessingException {
+        return mapper.writeValueAsString(new EchoResponse(myNodeId, dst, reply_to, echo, msg_id));
     }
-}
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class InitOkResponse {
-    private String src;
-    private String dest;
-    private InitOkResponseBody body;
-
-    public InitOkResponse(String myId, String dst, int reply_to) {
-        this.src = myId;
-        this.dest = dst;
-        this.body = new InitOkResponseBody(reply_to);
+    public String generateGenerateResponse(String myNodeId, String dst, int reply_to, String uniqueId) throws JsonProcessingException {
+        return mapper.writeValueAsString(new GenerateResponse(myNodeId, dst, reply_to, uniqueId));
     }
-}
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class InitOkResponseBody {
-    private final String type = "init_ok";
-    private final int in_reply_to;
-    public InitOkResponseBody(int in_reply_to) {
-        this.in_reply_to = in_reply_to;
+    public String generateCustomResponse(String myNodeId, String dst, JsonNode body) throws JsonProcessingException {
+        ObjectNode node = mapper.createObjectNode();
+        node.put("src", myNodeId);
+        node.put("dest", dst);
+        node.set("body", body);
+        return mapper.writeValueAsString(node);
     }
 }
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class EchoResponse {
-    private final String src;
-    private final String dest;
-    private EchoReponseBody body;
-
-    public EchoResponse(String id, String dest, int reply_to, String echo, int msg_id) {
-        this.src = id;
-        this.dest = dest;
-        this.body = new EchoReponseBody(reply_to, echo, msg_id);
-    }
-}
-
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class EchoReponseBody {
-    private final String type = "echo_ok";
-    private final int in_reply_to;
-    private final String echo;
-    private final int msg_id;
-
-    public EchoReponseBody(int in_reply_to, String echo, int msg_id) {
-        this.in_reply_to = in_reply_to;
-        this.echo = echo;
-        this.msg_id = msg_id;
-    }
-}

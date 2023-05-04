@@ -1,10 +1,7 @@
 package com.github.lant.maelstrom;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.lant.maelstrom.inputs.EchoMessage;
-import com.github.lant.maelstrom.inputs.InitMessage;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public interface MaelstromHandler {
-    void handleInit(InitMessage parseInit) throws JsonProcessingException;
-    void handleEcho(EchoMessage parseEcho) throws JsonProcessingException;
+    void handleRequest(String messageType, JsonNode receivedValue) throws Exception;
 }

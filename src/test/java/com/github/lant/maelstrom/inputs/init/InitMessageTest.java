@@ -1,11 +1,10 @@
-package com.github.lant.maelstrom.inputs;
+package com.github.lant.maelstrom.inputs.init;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.lant.maelstrom.inputs.init.InitMessage;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,21 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class InitMessageTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final String jsonMessage = """
-    {"src":"source","dest":"destination","body":{"type":"init","msg_id":1,"node_id":"n3","node_ids":["n1","n2","n3"]}}""";
-
-    @Test
-    void testToJson() throws JsonProcessingException {
-        var message = new InitMessage(
-                new Headers("source", "destination"),
-                1, "n3", List.of("n1","n2","n3"));
-
-        String json = objectMapper.writeValueAsString(message.toJson());
-        assertEquals(jsonMessage, json);
-    }
-
     @Test
     void testNonCanonicalConstructor() throws IOException {
+        String jsonMessage = """
+                {"src":"source","dest":"destination","body":{"type":"init","msg_id":1,"node_id":"n3","node_ids":["n1","n2","n3"]}}""";
         var message = new InitMessage(objectMapper.readTree(jsonMessage));
         assertEquals("source", message.headers().src());
         assertEquals("destination", message.headers().dest());
