@@ -9,10 +9,10 @@ class GenerateResponse {
     private final String dest;
     private GenerateReponseBody body;
 
-    public GenerateResponse(String id, String dest, int reply_to, String uniqueId) {
+    public GenerateResponse(String id, String dest, int replyTo, String uniqueId) {
         this.src = id;
         this.dest = dest;
-        this.body = new GenerateReponseBody(reply_to, uniqueId);
+        this.body = new GenerateReponseBody(replyTo, uniqueId);
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -22,8 +22,8 @@ class GenerateResponse {
         private final int in_reply_to;
         private final String id;
 
-        public GenerateReponseBody(int in_reply_to, String uniqueId) {
-            this.in_reply_to = in_reply_to;
+        public GenerateReponseBody(int inReplyTo, String uniqueId) {
+            this.in_reply_to = inReplyTo;
             this.id = uniqueId;
         }
     }

@@ -1,25 +1,40 @@
 plugins {
-    id 'java'
+  id 'java'
     id 'application'
+    id 'jacoco'
 }
 
 group 'com.github.lant.maelstrom-java'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }
 
 test {
-    useJUnitPlatform()
+  useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test
+
+    afterEvaluate {
+      classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                "**/example/*"
+            ])
+            }))
+    }
 }
 
 application {
-    mainClass = 'com.github.lant.maelstrom.example.Main'
+  mainClass = 'com.github.lant.maelstrom.example.Main'
 }
+
