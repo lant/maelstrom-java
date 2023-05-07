@@ -8,6 +8,9 @@ import com.github.lant.maelstrom.responses.echo.EchoResponse;
 import com.github.lant.maelstrom.responses.generate.GenerateResponse;
 import com.github.lant.maelstrom.responses.init.InitOkResponse;
 
+/**
+ * Stateless
+ */
 public class Responses {
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -19,19 +22,19 @@ public class Responses {
      * @return
      * @throws JsonProcessingException
      */
-    public String generateInitOk(String myNodeId, String dst, int reply_to) throws JsonProcessingException {
+    public static String generateInitOk(String myNodeId, String dst, int reply_to) throws JsonProcessingException {
         return mapper.writeValueAsString(new InitOkResponse(myNodeId, dst, reply_to));
     }
 
-    public String generateEchoResponse(String myNodeId, String dst, int reply_to, String echo, int msg_id) throws JsonProcessingException {
+    public static String generateEchoResponse(String myNodeId, String dst, int reply_to, String echo, int msg_id) throws JsonProcessingException {
         return mapper.writeValueAsString(new EchoResponse(myNodeId, dst, reply_to, echo, msg_id));
     }
 
-    public String generateGenerateResponse(String myNodeId, String dst, int reply_to, String uniqueId) throws JsonProcessingException {
+    public static String generateGenerateResponse(String myNodeId, String dst, int reply_to, String uniqueId) throws JsonProcessingException {
         return mapper.writeValueAsString(new GenerateResponse(myNodeId, dst, reply_to, uniqueId));
     }
 
-    public String generateCustomResponse(String myNodeId, String dst, JsonNode body) throws JsonProcessingException {
+    public static String generateCustomResponse(String myNodeId, String dst, JsonNode body) throws JsonProcessingException {
         ObjectNode node = mapper.createObjectNode();
         node.put("src", myNodeId);
         node.put("dest", dst);

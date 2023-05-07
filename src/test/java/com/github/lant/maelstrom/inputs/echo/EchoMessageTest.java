@@ -2,7 +2,6 @@ package com.github.lant.maelstrom.inputs.echo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.lant.maelstrom.inputs.echo.EchoMessage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

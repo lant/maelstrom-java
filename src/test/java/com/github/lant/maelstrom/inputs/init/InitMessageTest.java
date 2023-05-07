@@ -1,7 +1,6 @@
 package com.github.lant.maelstrom.inputs.init;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.lant.maelstrom.inputs.init.InitMessage;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

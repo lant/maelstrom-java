@@ -5,21 +5,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.lant.maelstrom.MaelstromHandler;
 import com.github.lant.maelstrom.inputs.echo.EchoMessage;
 import com.github.lant.maelstrom.inputs.init.InitMessage;
-import com.github.lant.maelstrom.responses.Responses;
+
+import static com.github.lant.maelstrom.responses.Responses.*;
+import static com.github.lant.maelstrom.responses.Responses.generateInitOk;
 
 
 class EchoMaelstromHandler implements MaelstromHandler {
-    private final Responses responses;
     String myId;
-
-    public EchoMaelstromHandler(Responses responses) {
-        this.responses = responses;
-    }
 
     private void handleInit(InitMessage parseInit) throws JsonProcessingException {
         myId = parseInit.node_id();
         System.err.println("--> Received: " + parseInit);
-        String response = responses.generateInitOk(
+        String response = generateInitOk(
                 myId,
                 parseInit.headers().src(),
                 parseInit.msg_id());
@@ -29,7 +26,7 @@ class EchoMaelstromHandler implements MaelstromHandler {
     }
 
     private void handleEcho(EchoMessage parseEcho) throws JsonProcessingException {
-        String response = responses.generateEchoResponse(
+        String response = generateEchoResponse(
                 myId,
                 parseEcho.headers().src(),
                 parseEcho.msg_id(),
