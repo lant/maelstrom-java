@@ -16,8 +16,7 @@ class EchoResponse {
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    static
-    class EchoReponseBody {
+    private static class EchoReponseBody {
         private final String type = "echo_ok";
         private final int in_reply_to;
         private final String echo;

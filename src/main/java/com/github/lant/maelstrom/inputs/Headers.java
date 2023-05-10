@@ -1,5 +1,9 @@
 package com.github.lant.maelstrom.inputs;
 
-public record Headers(String src, String dest) {}
+import java.util.List;
+import java.util.Map;
+
+public record Headers(String src, String dest) {
+}
 
 
