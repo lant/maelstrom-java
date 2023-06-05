@@ -1,13 +1,12 @@
 plugins {
-    id 'java'
-    id 'application'
+    id 'java-library'
     id 'jacoco'
     id 'signing'
     id 'maven-publish'
 }
 
 group 'com.github.lant.maelstrom-java'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -36,20 +35,6 @@ jacocoTestReport {
     }
 }
 
-application {
-    mainClass = 'com.github.lant.maelstrom.example.Main'
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-
-signing {
-    sign publishing.publications.mavenJava
-}
-
-
 javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
@@ -60,38 +45,56 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
+
 publishing {
     publications {
-        maven(MavenPublication) {
-            groupId = 'com.github.lant'
+        mavenJava(MavenPublication) {
             artifactId = 'maelstrom-java'
-            version = '1.0'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
 
             pom {
                 name = 'Maelstrom-java'
                 description = 'A java wrapper to write Maelstrom clients'
                 url = 'https://www.github.com/lant/maelstrom-java'
-            }
 
-            licenses {
-                license {
-                    name = 'The Apache License, Version 2.0'
-                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'marcdepalol'
+                        name = 'Marc de Palol'
+                        email = 'marcdepalol@posteo.net'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/lant/maelstrom-java.git'
+                    developerConnection = 'scm:git:ssh://github.com/lant/maelstrom-java.git'
+                    url = 'https://github.com/lant/maelstrom-java.git'
                 }
             }
-            developers {
-                developer {
-                    id = 'marcdepalol'
-                    name = 'Marc de Palol'
-                    email = 'marcdepalol@posteo.net'
-                }
-            }
-            scm {
-                connection = 'scm:git:git://github.com/lant/maelstrom-java.git'
-                developerConnection = 'scm:git:ssh://github.com/lant/maelstrom-java.git'
-                url = 'https://github.com/lant/maelstrom-java.git'
-            }
-            from components.java
         }
     }
+    repositories {
+        maven {
+            def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+            def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
