@@ -1,40 +1,97 @@
 plugins {
-  id 'java'
-  id 'application'
-  id 'jacoco'
+    id 'java'
+    id 'application'
+    id 'jacoco'
+    id 'signing'
+    id 'maven-publish'
 }
 
 group 'com.github.lant.maelstrom-java'
 version '1.0-SNAPSHOT'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }
 
 test {
-  useJUnitPlatform()
-  finalizedBy jacocoTestReport
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
-  dependsOn test
+    dependsOn test
 
-  afterEvaluate {
-    classDirectories.setFrom(files(classDirectories.files.collect {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                "**/example/*"
+                    "**/example/*"
             ])
-            }))
+        }))
     }
 }
 
 application {
-  mainClass = 'com.github.lant.maelstrom.example.Main'
+    mainClass = 'com.github.lant.maelstrom.example.Main'
 }
 
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.github.lant'
+            artifactId = 'maelstrom-java'
+            version = '1.0'
+
+            pom {
+                name = 'Maelstrom-java'
+                description = 'A java wrapper to write Maelstrom clients'
+                url = 'https://www.github.com/lant/maelstrom-java'
+            }
+
+            licenses {
+                license {
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+            developers {
+                developer {
+                    id = 'marcdepalol'
+                    name = 'Marc de Palol'
+                    email = 'marcdepalol@posteo.net'
+                }
+            }
+            scm {
+                connection = 'scm:git:git://github.com/lant/maelstrom-java.git'
+                developerConnection = 'scm:git:ssh://github.com/lant/maelstrom-java.git'
+                url = 'https://github.com/lant/maelstrom-java.git'
+            }
+            from components.java
+        }
+    }
+}
