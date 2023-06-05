@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ResponsesTest {
@@ -46,5 +48,28 @@ class ResponsesTest {
                 {"src":"my_node_id","dest":"destination","body":{"this":"that","other_this":"other_that"}}
                 """.trim(),
                 Responses.generateCustomResponse("my_node_id", "destination", node));
+    }
+
+    @Test
+    void generateBroadcastResponse() throws JsonProcessingException {
+        assertEquals("""
+                {"src":"my_node_id","dest":"destination","body":{"type":"broadcast_ok"}}
+                """.trim(),
+                Responses.generateBroadcastResponse("my_node_id", "destination"));
+    }
+
+    @Test
+    void testGenerateBroadcastReadResponse() throws JsonProcessingException {
+        assertEquals("""
+                {"src":"my_node_id","dest":"destination","body":{"type":"read_ok","messages":[1,2,3,4,5]}}
+                """.trim(), Responses.generateBroadcastReadResponse("my_node_id", "destination",
+                List.of(1,2,3,4,5)));
+    }
+
+    @Test
+    void testGenerateBroadcastTopologyResponse() throws JsonProcessingException {
+        assertEquals("""
+                {"src":"my_node_id","dest":"destination","body":{"type":"topology_ok"}}
+                """.trim(), Responses.generateBroadcastTopologyResponse("my_node_id", "destination"));
     }
 }

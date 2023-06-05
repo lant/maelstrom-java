@@ -13,6 +13,7 @@ Currently, the library has implementations for all the messages that you would n
 
 * [Exercise 1, Echo](https://fly.io/dist-sys/1/)
 * [Exercise 2, Unique ID Generation](https://fly.io/dist-sys/2/)
+* [Exercise 3, Broadcast](https://fly.io/dist-sys/3a/)
 
 ## Usage
 
@@ -20,7 +21,7 @@ The idea is that library should be easy to use, so you can focus on solving the 
 
 In the `com.github.lant.maelstrom.example` package you'll find an Example that solves exercise 1 and 2.
 
-In your `main` method you'd need to use the two main classes: 
+In your `main` method you'd need to use two classes: 
 
 ```java
 public static void main(String[] args) throws Exception {
@@ -58,12 +59,15 @@ So, let's see how the `handleInit` method is implemented:
 ```java
 private void handleInit(InitMessage parseInit) throws JsonProcessingException {
     myId = parseInit.node_id();
+    // debugging info
     System.err.println("--> Received: " + parseInit);
     String response = generateInitOk(
             myId,
             parseInit.headers().src(),
             parseInit.msg_id());
+    // debugging
     System.err.println("--> Responding: " + response);
+    // what Maelstrom will read
     System.out.println(response);
 }
 ```

@@ -14,6 +14,7 @@ public class BroadcastResponse {
         this.body = new BroadcastResponseBody();
     }
 
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     private class BroadcastResponseBody {
         private final String type = "broadcast_ok";
     }
